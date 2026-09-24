@@ -4,9 +4,9 @@ NovaSaaS is a premium foundation for a modern SaaS admin dashboard.
 
 ## Current status
 
-**Step 1 — Foundation**
+**Step 3 — Dashboard Shell**
 
-This project currently contains the initial frontend foundation and a temporary welcome page. Dashboard features will be implemented in a later step.
+This project now includes a responsive dashboard shell with typed navigation, desktop/mobile sidebar, sticky header, breadcrumbs, command menu, organization and user menus, notifications preview, settings layout, and placeholder screens for each planned route. Business data, authentication, permissions, charts, and real tables remain intentionally deferred.
 
 ## Technology stack
 
@@ -14,6 +14,10 @@ This project currently contains the initial frontend foundation and a temporary 
 - TypeScript in strict mode
 - Tailwind CSS
 - Geist application font
+- Radix UI primitives
+- Class Variance Authority
+- Lucide React icons
+- next-themes
 - ESLint and Prettier
 - npm
 
@@ -68,15 +72,126 @@ npm run build
 
 Open [http://localhost:3000](http://localhost:3000) after starting the development server.
 
+## Theme system
+
+The application uses `next-themes` with a `ThemeProvider` wrapper in `src/components/theme/theme-provider.tsx` and a `ThemeToggle` selector in `src/components/theme/theme-toggle.tsx`.
+
+Behavior:
+
+- Default theme is `system`
+- Light, dark, and system modes are supported
+- Theme changes are applied without hydration mismatches thanks to `suppressHydrationWarning` on the root html element
+- The UI relies on semantic CSS variables defined in `src/app/globals.css`
+
+## Design tokens
+
+The global design language is defined in `src/app/globals.css` and includes semantic tokens for:
+
+- background / foreground
+- surface / surface-foreground
+- muted / muted-foreground
+- primary / primary-foreground
+- secondary / secondary-foreground
+- accent / accent-foreground
+- destructive / destructive-foreground
+- success / success-foreground
+- warning / warning-foreground
+- info / info-foreground
+- border / input / ring
+- card / card-foreground
+- popover / popover-foreground
+- sidebar and chart variables reserved for future steps
+
+The light and dark theme values are encoded as CSS custom properties and exposed to Tailwind through `@theme inline` so components can use semantic class names without repeating hard-coded colors.
+
+## UI component library
+
+Available components in `src/components/ui/`:
+
+- alert
+- avatar
+- badge
+- button
+- card
+- checkbox
+- dialog
+- dropdown-menu
+- input
+- label
+- select
+- separator
+- skeleton
+- switch
+- tabs
+- textarea
+- tooltip
+
+## Routes
+
+The dashboard is available at `/dashboard`. Placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
+
+The design-system showcase remains available at:
+
+A development showcase is available at:
+
+```text
+/design-system
+```
+
+The route demonstrates the component library, tokens, spacing, form states, overlays, theme selector, and responsive layout patterns without building dashboard feature screens.
+
+## Basic component usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+export function Example() {
+  return (
+    <div className="flex items-center gap-2">
+      <Badge variant="success">Healthy</Badge>
+      <Button variant="secondary" size="sm">
+        Review action
+      </Button>
+    </div>
+  );
+}
+```
+
+## Adding a variant
+
+To add a new component variant:
+
+1. Update the `cva` variants for the component.
+2. Keep the variant names semantic and reusable.
+3. Add a small set of corresponding examples to `/design-system`.
+4. Ensure the variant works in both light and dark modes.
+5. Validate the component with ESLint, TypeScript, Prettier, and a production build.
+
+## Accessibility conventions
+
+- Prefer semantic HTML and labels for all form controls.
+- Maintain visible focus rings and keyboard support for interactive elements.
+- Provide accessible names for icon-only controls and menus.
+- Use text and semantic context, not color alone, to communicate status.
+- Keep touch targets comfortably sized and avoid inaccessible overlays.
+- Use Radix UI primitives when implementing keyboard-managed interactions.
+
+## Frontend-only project status
+
+This project remains frontend-only. There is no authentication, backend, database, API layer, or payment processing implemented in this repository.
+
 ## Folder structure
 
 ```text
 src/
 ├── app/
+│   ├── design-system/
 │   ├── globals.css
 │   ├── layout.tsx
 │   └── page.tsx
 ├── components/
+│   ├── theme/
 │   └── ui/
 ├── config/
 │   └── app.config.ts
@@ -84,5 +199,3 @@ src/
 │   └── utils.ts
 └── types/
 ```
-
-This is currently a frontend-only project. No real authentication, backend, database, or payment functionality has been implemented.

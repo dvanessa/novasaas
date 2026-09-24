@@ -1,37 +1,124 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8f9fc;
-  --foreground: #17172a;
-  --card: #ffffff;
-  --muted-foreground: #5d6175;
-  --border: #e3e5ed;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
   --primary: #4f46e5;
-  --primary-foreground: #ffffff;
+  --primary-foreground: #f8fafc;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0f172a;
+  --accent: #eef2ff;
+  --accent-foreground: #1e1b4b;
+  --destructive: #dc2626;
+  --destructive-foreground: #f8fafc;
+  --success: #16a34a;
+  --success-foreground: #f0fdf4;
+  --warning: #d97706;
+  --warning-foreground: #fff7ed;
+  --info: #0ea5e9;
+  --info-foreground: #f0f9ff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: rgba(79, 70, 229, 0.55);
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --radius: 0.75rem;
+  --sidebar-background: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-accent: #eef2ff;
+  --sidebar-accent-foreground: #1e1b4b;
+  --sidebar-ring: rgba(79, 70, 229, 0.55);
+  --chart-1: #4f46e5;
+  --chart-2: #8b5cf6;
+  --chart-3: #22c55e;
+  --chart-4: #f59e0b;
+  --chart-5: #ef4444;
+}
+
+.dark {
+  --background: #020817;
+  --foreground: #e2e8f0;
+  --surface: #0f172a;
+  --surface-foreground: #e2e8f0;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --primary: #818cf8;
+  --primary-foreground: #0f172a;
+  --secondary: #1e293b;
+  --secondary-foreground: #e2e8f0;
+  --accent: #1e1b4b;
+  --accent-foreground: #e0e7ff;
+  --destructive: #f87171;
+  --destructive-foreground: #1f2937;
+  --success: #4ade80;
+  --success-foreground: #052e16;
+  --warning: #fbbf24;
+  --warning-foreground: #451a03;
+  --info: #38bdf8;
+  --info-foreground: #082f49;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: rgba(129, 140, 248, 0.65);
+  --card: #0f172a;
+  --card-foreground: #e2e8f0;
+  --popover: #111827;
+  --popover-foreground: #e2e8f0;
+  --radius: 0.75rem;
+  --sidebar-background: #020817;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-border: #1e293b;
+  --sidebar-accent: #1e1b4b;
+  --sidebar-accent-foreground: #e0e7ff;
+  --sidebar-ring: rgba(129, 140, 248, 0.65);
+  --chart-1: #818cf8;
+  --chart-2: #a78bfa;
+  --chart-3: #4ade80;
+  --chart-4: #fbbf24;
+  --chart-5: #f87171;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0d0d18;
-    --foreground: #f5f5ff;
-    --card: #171728;
-    --muted-foreground: #b5b5c9;
-    --border: #2a2a40;
-    --primary: #818cf8;
-    --primary-foreground: #101020;
-  }
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
 }
 
 * {
@@ -40,6 +127,7 @@
 
 html {
   min-height: 100%;
+  background: var(--background);
 }
 
 body {
@@ -54,6 +142,6 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
