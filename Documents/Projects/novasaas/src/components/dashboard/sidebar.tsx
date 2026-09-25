@@ -12,6 +12,7 @@ import {
   utilityNavigation,
   workspaceNavigation,
 } from "@/config/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 import { AppLogo } from "./app-logo";
@@ -65,6 +66,13 @@ function SidebarContent({
   collapsed?: boolean;
 }) {
   const pathname = usePathname();
+  const { account } = useAuth();
+  const filterItems = (items: typeof mainNavigation) =>
+    items.filter(
+      (item) =>
+        !item.permission ||
+        account?.permissions.includes(item.permission as never),
+    );
   return (
     <div className="flex h-full flex-col gap-5 p-4">
       <AppLogo />
@@ -72,28 +80,28 @@ function SidebarContent({
       <nav className="flex-1 space-y-6 overflow-y-auto">
         <NavGroup
           title="Workspace"
-          items={mainNavigation}
+          items={filterItems(mainNavigation)}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
         />
         <NavGroup
           title="Operations"
-          items={workspaceNavigation}
+          items={filterItems(workspaceNavigation)}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
         />
         <NavGroup
           title="Settings"
-          items={settingsNavigation}
+          items={filterItems(settingsNavigation)}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
         />
         <NavGroup
           title="Support"
-          items={utilityNavigation}
+          items={filterItems(utilityNavigation)}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}

@@ -12,8 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DEMO_ACCOUNTS } from "@/config/auth.config";
+import { useAuth } from "@/hooks/use-auth";
 
 export function UserMenu() {
+  const { account, signIn, signOut } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -21,19 +24,30 @@ export function UserMenu() {
         aria-label="Open user menu"
       >
         <Avatar>
-          <AvatarFallback>VD</AvatarFallback>
+          <AvatarFallback>{account?.initials ?? "?"}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuLabel>
-          <p className="font-medium">Vanessa Duarte</p>
+          <p className="font-medium">{account?.name ?? "Demo user"}</p>
           <p className="text-muted-foreground text-xs font-normal">
-            vanessa@example.com
+            {account?.email ?? "Not signed in"}
           </p>
           <p className="text-muted-foreground text-xs font-normal">
-            Super Admin
+            {account?.role ?? "Guest"}
           </p>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {DEMO_ACCOUNTS.filter((candidate) => candidate.id !== account?.id).map(
+          (candidate) => (
+            <DropdownMenuItem
+              key={candidate.id}
+              onClick={() => signIn(candidate)}
+            >
+              Switch to {candidate.name}
+            </DropdownMenuItem>
+          ),
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/settings/profile">
@@ -60,7 +74,7 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut}>
           <LogOut className="mr-2 size-4" />
           Sign out
         </DropdownMenuItem>
