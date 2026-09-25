@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { DemoNotice } from "@/components/auth/demo-notice";
@@ -10,29 +11,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DEMO_ACCOUNTS } from "@/config/auth.config";
-import { authenticateDemoAccount } from "@/features/auth/services/demo-auth.service";
+import { listDemoAccounts } from "@/features/auth/services/auth.service";
 import { useAuth } from "@/hooks/use-auth";
+import type { DemoUser } from "@/types/auth";
 import { ROLE_LABELS } from "@/types/auth";
 
 import { loginSchema, type LoginValues } from "../schemas/login.schema";
 
 export function LoginForm() {
-  const { signIn } = useAuth();
+  const { signIn, switchAccount } = useAuth();
+  const [accounts, setAccounts] = useState<DemoUser[]>([]);
+  const [loadingAccounts, setLoadingAccounts] = useState(true);
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: DEMO_ACCOUNTS[0].email, password: "" },
+    defaultValues: { email: "", password: "" },
   });
 
-  function submit(values: LoginValues) {
-    const account = authenticateDemoAccount(values.email, values.password);
-    if (!account) {
+  useEffect(() => {
+    let active = true;
+    void listDemoAccounts().then((demoAccounts) => {
+      if (active) {
+        setAccounts(demoAccounts);
+        setLoadingAccounts(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function submit(values: LoginValues) {
+    const result = await signIn(values);
+    if (!result.success) {
       form.setError("email", {
-        message: "Use a configured demo account and its fixture password.",
+        message: result.error.message,
       });
-      return;
     }
-    signIn(account);
   }
 
   return (
@@ -85,13 +99,26 @@ export function LoginForm() {
           <p className="text-muted-foreground text-xs font-medium uppercase">
             Quick account switch
           </p>
-          {DEMO_ACCOUNTS.map((account) => (
+          {loadingAccounts ? (
+            <p className="text-muted-foreground text-sm" role="status">
+              Loading demo accounts…
+            </p>
+          ) : null}
+          {accounts.map((account) => (
             <Button
               key={account.id}
               type="button"
               variant="outline"
               className="h-auto w-full justify-between py-2"
-              onClick={() => signIn(account)}
+              disabled={form.formState.isSubmitting}
+              onClick={async () => {
+                const result = await switchAccount(account.id);
+                if (!result.success) {
+                  form.setError("root.serverError", {
+                    message: result.error.message,
+                  });
+                }
+              }}
             >
               <span className="text-left">
                 <span className="block text-sm">{account.name}</span>
@@ -102,6 +129,9 @@ export function LoginForm() {
               <span className="text-muted-foreground text-xs">Use</span>
             </Button>
           ))}
+          <FormMessage>
+            {form.formState.errors.root?.serverError?.message}
+          </FormMessage>
         </div>
         <p className="text-muted-foreground text-center text-xs">
           Need an account?{" "}

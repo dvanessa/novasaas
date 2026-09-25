@@ -40,6 +40,7 @@ export type DemoAccount = DemoUser & {
 };
 
 export type AuthenticationSession = {
+  version: 1;
   accountId: DemoUser["id"];
   createdAt: string;
 };
@@ -53,3 +54,21 @@ export type ProtectedRouteConfiguration = {
   pathname: string;
   permission?: Permission;
 };
+
+export type RegistrationData = {
+  workspace: string;
+  email: string;
+};
+
+export type PasswordResetData = {
+  password: string;
+  confirmPassword: string;
+};
+
+export type AuthServiceError = {
+  code: "INVALID_CREDENTIALS" | "STORAGE_UNAVAILABLE" | "UNKNOWN";
+  message: string;
+};
+
+export type AuthResult<T> =
+  { success: true; data: T } | { success: false; error: AuthServiceError };

@@ -152,6 +152,13 @@ Authentication types are centralized in `src/types/auth.ts` and
 `src/types/permissions.ts`. Stable role identifiers are `super_admin`,
 `manager`, and `member`; human-readable role labels are presentation-only.
 
+Authentication operations are abstracted in
+`src/features/auth/services/auth.service.ts` and return typed async results.
+The client-side store in `src/stores/auth.store.ts` owns session hydration and
+storage. It persists only the versioned `novasaas-demo-session` record
+(`version`, `accountId`, and `createdAt`); invalid or outdated records are
+discarded. Fixture passwords and credentials are never persisted.
+
 The design-system showcase remains available at:
 
 A development showcase is available at:

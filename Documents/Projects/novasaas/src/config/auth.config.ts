@@ -63,6 +63,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
 ];
 
 export const AUTH_STORAGE_KEY = "novasaas-demo-session";
+export const AUTH_SESSION_VERSION = 1;
 export const DEMO_AUTH_NOTICE =
   "Demo mode: this is a frontend-only session. No real credentials or tokens are used.";
 

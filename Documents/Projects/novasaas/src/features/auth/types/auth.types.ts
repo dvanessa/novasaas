@@ -2,15 +2,19 @@ import type {
   ApplicationRole,
   AuthenticationSession,
   AuthenticationStatus,
+  AuthResult,
+  AuthServiceError,
   DemoAccount,
   DemoUser,
   LoginCredentials,
+  PasswordResetData,
   ProtectedRouteConfiguration,
+  RegistrationData,
 } from "@/types/auth";
 import type { Permission } from "@/types/permissions";
 
 export type AuthState = {
-  account: DemoUser | null;
+  currentUser: DemoUser | null;
   hydrated: boolean;
   status: AuthenticationStatus;
 };
@@ -21,9 +25,13 @@ export type {
   ApplicationRole,
   AuthenticationSession,
   AuthenticationStatus,
+  AuthResult,
+  AuthServiceError,
   DemoAccount,
   DemoUser,
   LoginCredentials,
+  PasswordResetData,
   Permission,
   ProtectedRouteConfiguration,
+  RegistrationData,
 };

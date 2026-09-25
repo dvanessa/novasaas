@@ -1,5 +1,5 @@
 import {
-  DEMO_ACCOUNTS,
+  AUTH_SESSION_VERSION,
   type DemoAccount,
   getDemoAccount,
 } from "@/config/auth.config";
@@ -7,8 +7,12 @@ import type { AuthenticationSession, DemoUser } from "@/types/auth";
 
 export type DemoSession = AuthenticationSession;
 
-export function createDemoSession(account: DemoAccount): DemoSession {
-  return { accountId: account.id, createdAt: new Date().toISOString() };
+export function createDemoSession(account: DemoUser): DemoSession {
+  return {
+    version: AUTH_SESSION_VERSION,
+    accountId: account.id,
+    createdAt: new Date().toISOString(),
+  };
 }
 
 export function resolveSession(session: DemoSession | null): DemoUser | null {
@@ -26,8 +30,4 @@ export function toDemoUser(account: DemoAccount): DemoUser {
     permissions: account.permissions,
     initials: account.initials,
   };
-}
-
-export function getDefaultDemoAccount() {
-  return DEMO_ACCOUNTS[0];
 }

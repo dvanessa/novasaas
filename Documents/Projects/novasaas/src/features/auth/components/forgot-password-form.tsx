@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { requestPasswordReset } from "@/features/auth/services/auth.service";
 
 import {
   forgotPasswordSchema,
@@ -41,10 +42,22 @@ export function ForgotPasswordForm() {
           </p>
         ) : (
           <form
-            onSubmit={form.handleSubmit(() => setSubmitted(true))}
+            onSubmit={form.handleSubmit(async (values) => {
+              const result = await requestPasswordReset(values.email);
+              if (result.success) {
+                setSubmitted(true);
+              } else {
+                form.setError("root.serverError", {
+                  message: result.error.message,
+                });
+              }
+            })}
             className="space-y-4"
             noValidate
           >
+            <FormMessage>
+              {form.formState.errors.root?.serverError?.message}
+            </FormMessage>
             <div className="space-y-2">
               <Label htmlFor="recovery-email">Email address</Label>
               <Input
@@ -56,7 +69,12 @@ export function ForgotPasswordForm() {
               />
               <FormMessage>{form.formState.errors.email?.message}</FormMessage>
             </div>
-            <Button className="w-full" type="submit">
+            <Button
+              className="w-full"
+              type="submit"
+              loading={form.formState.isSubmitting}
+              loadingText="Preparing demo recovery…"
+            >
               Prepare demo recovery
             </Button>
           </form>

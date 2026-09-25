@@ -1,65 +1,65 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 
-import { type DemoAccount } from "@/config/auth.config";
-import { toDemoUser } from "@/lib/auth-service";
 import {
-  clearDemoSession,
-  readDemoAccount,
-  saveDemoSession,
-} from "@/lib/auth-store";
-import {
-  AUTH_STATUSES,
-  type AuthenticationStatus,
-  type DemoUser,
-} from "@/types/auth";
+  getAuthStoreServerSnapshot,
+  getAuthStoreSnapshot,
+  initializeAuthStore,
+  login as loginToStore,
+  logout as logoutFromStore,
+  subscribeAuthStore,
+  switchAccount as switchStoreAccount,
+} from "@/stores/auth.store";
+import type { LoginCredentials } from "@/types/auth";
 
 export function useAuth() {
   const router = useRouter();
   const pathname = usePathname();
-  const [account, setAccount] = useState<DemoUser | null>(null);
-  const [hydrated, setHydrated] = useState(false);
-
-  const refresh = useCallback(() => {
-    setAccount(readDemoAccount());
-    setHydrated(true);
-  }, []);
+  const { currentUser, status, hydrated } = useSyncExternalStore(
+    subscribeAuthStore,
+    getAuthStoreSnapshot,
+    getAuthStoreServerSnapshot,
+  );
 
   useEffect(() => {
-    // localStorage is only available in the browser, so hydrate after mount.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    refresh();
-    const onChange = () => refresh();
-    window.addEventListener("storage", onChange);
-    window.addEventListener("novasaas-auth-change", onChange);
-    return () => {
-      window.removeEventListener("storage", onChange);
-      window.removeEventListener("novasaas-auth-change", onChange);
-    };
-  }, [refresh]);
+    initializeAuthStore();
+  }, []);
 
   const signIn = useCallback(
-    (nextAccount: DemoAccount) => {
-      saveDemoSession(nextAccount);
-      setAccount(toDemoUser(nextAccount));
-      router.push("/dashboard");
+    async (credentials: LoginCredentials) => {
+      const result = await loginToStore(credentials);
+      if (result.success) router.push("/dashboard");
+      return result;
     },
     [router],
   );
 
-  const signOut = useCallback(() => {
-    clearDemoSession();
-    setAccount(null);
-    router.push(`/auth/login?next=${encodeURIComponent(pathname)}`);
+  const switchAccount = useCallback(
+    async (accountId: string) => {
+      const result = await switchStoreAccount(accountId);
+      if (result.success) router.push("/dashboard");
+      return result;
+    },
+    [router],
+  );
+
+  const signOut = useCallback(async () => {
+    const result = await logoutFromStore();
+    if (result.success) {
+      router.push(`/auth/login?next=${encodeURIComponent(pathname)}`);
+    }
+    return result;
   }, [pathname, router]);
 
-  const status: AuthenticationStatus = !hydrated
-    ? AUTH_STATUSES.LOADING
-    : account
-      ? AUTH_STATUSES.AUTHENTICATED
-      : AUTH_STATUSES.UNAUTHENTICATED;
-
-  return { account, hydrated, status, signIn, signOut };
+  return {
+    account: currentUser,
+    currentUser,
+    status,
+    hydrated,
+    signIn,
+    switchAccount,
+    signOut,
+  };
 }

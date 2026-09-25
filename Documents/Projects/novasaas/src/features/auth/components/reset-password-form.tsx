@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { resetPassword } from "@/features/auth/services/auth.service";
 
 import {
   resetPasswordSchema,
@@ -40,10 +41,22 @@ export function ResetPasswordForm() {
           </p>
         ) : (
           <form
-            onSubmit={form.handleSubmit(() => setSubmitted(true))}
+            onSubmit={form.handleSubmit(async (values) => {
+              const result = await resetPassword(values);
+              if (result.success) {
+                setSubmitted(true);
+              } else {
+                form.setError("root.serverError", {
+                  message: result.error.message,
+                });
+              }
+            })}
             className="space-y-4"
             noValidate
           >
+            <FormMessage>
+              {form.formState.errors.root?.serverError?.message}
+            </FormMessage>
             <div className="space-y-2">
               <Label htmlFor="new-password">New password</Label>
               <Input
@@ -70,7 +83,12 @@ export function ResetPasswordForm() {
                 {form.formState.errors.confirmPassword?.message}
               </FormMessage>
             </div>
-            <Button className="w-full" type="submit">
+            <Button
+              className="w-full"
+              type="submit"
+              loading={form.formState.isSubmitting}
+              loadingText="Resetting demo password…"
+            >
               Reset demo password
             </Button>
           </form>
