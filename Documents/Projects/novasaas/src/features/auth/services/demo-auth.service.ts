@@ -15,3 +15,11 @@ export function findDemoAccount(email: string): DemoAccount | null {
 export function findDemoAccountById(id: string): DemoAccount | null {
   return getDemoAccount(id) ?? null;
 }
+
+export function authenticateDemoAccount(
+  email: string,
+  password: string,
+): DemoAccount | null {
+  const account = findDemoAccount(email);
+  return account?.password === password ? account : null;
+}

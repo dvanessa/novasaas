@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { DEMO_ACCOUNTS } from "@/config/auth.config";
+
 import { forgotPasswordSchema } from "./forgot-password.schema";
 import { loginSchema } from "./login.schema";
 import { registerSchema } from "./register.schema";
@@ -8,7 +10,10 @@ import { resetPasswordSchema } from "./reset-password.schema";
 describe("auth schemas", () => {
   it("accepts valid login and registration values", () => {
     expect(
-      loginSchema.safeParse({ email: "vanessa@example.com" }).success,
+      loginSchema.safeParse({
+        email: DEMO_ACCOUNTS[0].email,
+        password: DEMO_ACCOUNTS[0].password,
+      }).success,
     ).toBe(true);
     expect(
       registerSchema.safeParse({

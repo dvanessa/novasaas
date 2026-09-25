@@ -1,4 +1,4 @@
-export type DemoRole = "owner" | "admin" | "member";
+export type DemoRole = "super-admin" | "manager" | "member";
 
 export type Permission =
   | "dashboard.read"
@@ -14,17 +14,23 @@ export type DemoAccount = {
   id: string;
   name: string;
   email: string;
+  password: string;
   role: DemoRole;
+  roleLabel: string;
+  organization: string;
   permissions: Permission[];
   initials: string;
 };
 
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    id: "demo-owner",
+    id: "demo-super-admin",
     name: "Vanessa Duarte",
-    email: "vanessa@example.com",
-    role: "owner",
+    email: "admin@demo.com",
+    password: "password",
+    role: "super-admin",
+    roleLabel: "Super Admin",
+    organization: "Nova Studio",
     permissions: [
       "dashboard.read",
       "analytics.read",
@@ -38,10 +44,13 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     initials: "VD",
   },
   {
-    id: "demo-admin",
+    id: "demo-manager",
     name: "Alex Morgan",
-    email: "alex@example.com",
-    role: "admin",
+    email: "manager@demo.com",
+    password: "password",
+    role: "manager",
+    roleLabel: "Manager",
+    organization: "Nova Studio",
     permissions: [
       "dashboard.read",
       "analytics.read",
@@ -54,9 +63,12 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   },
   {
     id: "demo-member",
-    name: "Jamie Lee",
-    email: "jamie@example.com",
+    name: "Jordan Lee",
+    email: "member@demo.com",
+    password: "password",
     role: "member",
+    roleLabel: "Member",
+    organization: "Nova Studio",
     permissions: ["dashboard.read", "analytics.read", "settings.read"],
     initials: "JL",
   },

@@ -18,6 +18,9 @@ describe("demo auth store", () => {
     expect(localStorage.getItem("novasaas-demo-session")).not.toContain(
       "password",
     );
+    expect(localStorage.getItem("novasaas-demo-session")).not.toContain(
+      DEMO_ACCOUNTS[1].email,
+    );
   });
 
   it("clears the persisted session", () => {

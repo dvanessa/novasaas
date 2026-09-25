@@ -34,7 +34,10 @@ export function UserMenu() {
             {account?.email ?? "Not signed in"}
           </p>
           <p className="text-muted-foreground text-xs font-normal">
-            {account?.role ?? "Guest"}
+            {account?.roleLabel ?? "Guest"}
+          </p>
+          <p className="text-muted-foreground text-xs font-normal">
+            {account?.organization ?? "No organization"}
           </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

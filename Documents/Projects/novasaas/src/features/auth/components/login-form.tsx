@@ -11,6 +11,7 @@ import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DEMO_ACCOUNTS } from "@/config/auth.config";
+import { authenticateDemoAccount } from "@/features/auth/services/demo-auth.service";
 import { useAuth } from "@/hooks/use-auth";
 
 import { loginSchema, type LoginValues } from "../schemas/login.schema";
@@ -19,17 +20,14 @@ export function LoginForm() {
   const { signIn } = useAuth();
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: DEMO_ACCOUNTS[0].email },
+    defaultValues: { email: DEMO_ACCOUNTS[0].email, password: "" },
   });
 
   function submit(values: LoginValues) {
-    const account = DEMO_ACCOUNTS.find(
-      (candidate) =>
-        candidate.email.toLowerCase() === values.email.toLowerCase(),
-    );
+    const account = authenticateDemoAccount(values.email, values.password);
     if (!account) {
       form.setError("email", {
-        message: "Use one of the demo accounts below to continue.",
+        message: "Use a configured demo account and its fixture password.",
       });
       return;
     }
@@ -62,6 +60,17 @@ export function LoginForm() {
             />
             <FormMessage>{form.formState.errors.email?.message}</FormMessage>
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Demo password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              aria-invalid={Boolean(form.formState.errors.password)}
+              {...form.register("password")}
+            />
+            <FormMessage>{form.formState.errors.password?.message}</FormMessage>
+          </div>
           <Button
             className="w-full"
             type="submit"
@@ -86,7 +95,7 @@ export function LoginForm() {
               <span className="text-left">
                 <span className="block text-sm">{account.name}</span>
                 <span className="text-muted-foreground block text-xs">
-                  {account.role} · {account.email}
+                  {account.roleLabel} · {account.email}
                 </span>
               </span>
               <span className="text-muted-foreground text-xs">Use</span>
