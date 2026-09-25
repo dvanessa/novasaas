@@ -14,7 +14,15 @@ describe("demo auth store", () => {
     saveDemoSession(DEMO_ACCOUNTS[1]);
 
     expect(readDemoSession()).toMatchObject({ accountId: DEMO_ACCOUNTS[1].id });
-    expect(readDemoAccount()).toEqual(DEMO_ACCOUNTS[1]);
+    expect(readDemoAccount()).toEqual({
+      id: DEMO_ACCOUNTS[1].id,
+      name: DEMO_ACCOUNTS[1].name,
+      email: DEMO_ACCOUNTS[1].email,
+      role: DEMO_ACCOUNTS[1].role,
+      organization: DEMO_ACCOUNTS[1].organization,
+      permissions: DEMO_ACCOUNTS[1].permissions,
+      initials: DEMO_ACCOUNTS[1].initials,
+    });
     expect(localStorage.getItem("novasaas-demo-session")).not.toContain(
       "password",
     );

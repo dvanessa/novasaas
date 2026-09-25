@@ -4,16 +4,22 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { type DemoAccount } from "@/config/auth.config";
+import { toDemoUser } from "@/lib/auth-service";
 import {
   clearDemoSession,
   readDemoAccount,
   saveDemoSession,
 } from "@/lib/auth-store";
+import {
+  AUTH_STATUSES,
+  type AuthenticationStatus,
+  type DemoUser,
+} from "@/types/auth";
 
 export function useAuth() {
   const router = useRouter();
   const pathname = usePathname();
-  const [account, setAccount] = useState<DemoAccount | null>(null);
+  const [account, setAccount] = useState<DemoUser | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   const refresh = useCallback(() => {
@@ -37,7 +43,7 @@ export function useAuth() {
   const signIn = useCallback(
     (nextAccount: DemoAccount) => {
       saveDemoSession(nextAccount);
-      setAccount(nextAccount);
+      setAccount(toDemoUser(nextAccount));
       router.push("/dashboard");
     },
     [router],
@@ -49,5 +55,11 @@ export function useAuth() {
     router.push(`/auth/login?next=${encodeURIComponent(pathname)}`);
   }, [pathname, router]);
 
-  return { account, hydrated, signIn, signOut };
+  const status: AuthenticationStatus = !hydrated
+    ? AUTH_STATUSES.LOADING
+    : account
+      ? AUTH_STATUSES.AUTHENTICATED
+      : AUTH_STATUSES.UNAUTHENTICATED;
+
+  return { account, hydrated, status, signIn, signOut };
 }

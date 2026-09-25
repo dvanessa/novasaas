@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DEMO_ACCOUNTS } from "@/config/auth.config";
 import { useAuth } from "@/hooks/use-auth";
+import { ROLE_LABELS } from "@/types/auth";
 
 export function UserMenu() {
   const { account, signIn, signOut } = useAuth();
@@ -34,7 +35,7 @@ export function UserMenu() {
             {account?.email ?? "Not signed in"}
           </p>
           <p className="text-muted-foreground text-xs font-normal">
-            {account?.roleLabel ?? "Guest"}
+            {account ? ROLE_LABELS[account.role] : "Guest"}
           </p>
           <p className="text-muted-foreground text-xs font-normal">
             {account?.organization ?? "No organization"}

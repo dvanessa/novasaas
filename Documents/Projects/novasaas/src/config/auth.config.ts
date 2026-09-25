@@ -1,26 +1,13 @@
-export type DemoRole = "super-admin" | "manager" | "member";
+import {
+  APPLICATION_ROLES,
+  type ApplicationRole,
+  type DemoAccount,
+  type DemoUser,
+} from "@/types/auth";
+import { type Permission, PERMISSIONS } from "@/types/permissions";
 
-export type Permission =
-  | "dashboard.read"
-  | "analytics.read"
-  | "organizations.read"
-  | "users.read"
-  | "roles.read"
-  | "billing.read"
-  | "audit.read"
-  | "settings.read";
-
-export type DemoAccount = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  role: DemoRole;
-  roleLabel: string;
-  organization: string;
-  permissions: Permission[];
-  initials: string;
-};
+export type DemoRole = ApplicationRole;
+export type { DemoAccount, Permission };
 
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
@@ -28,18 +15,17 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     name: "Vanessa Duarte",
     email: "admin@demo.com",
     password: "password",
-    role: "super-admin",
-    roleLabel: "Super Admin",
+    role: APPLICATION_ROLES.SUPER_ADMIN,
     organization: "Nova Studio",
     permissions: [
-      "dashboard.read",
-      "analytics.read",
-      "organizations.read",
-      "users.read",
-      "roles.read",
-      "billing.read",
-      "audit.read",
-      "settings.read",
+      PERMISSIONS.DASHBOARD_READ,
+      PERMISSIONS.ANALYTICS_READ,
+      PERMISSIONS.ORGANIZATIONS_READ,
+      PERMISSIONS.USERS_READ,
+      PERMISSIONS.ROLES_READ,
+      PERMISSIONS.BILLING_READ,
+      PERMISSIONS.AUDIT_READ,
+      PERMISSIONS.SETTINGS_READ,
     ],
     initials: "VD",
   },
@@ -48,16 +34,15 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     name: "Alex Morgan",
     email: "manager@demo.com",
     password: "password",
-    role: "manager",
-    roleLabel: "Manager",
+    role: APPLICATION_ROLES.MANAGER,
     organization: "Nova Studio",
     permissions: [
-      "dashboard.read",
-      "analytics.read",
-      "organizations.read",
-      "users.read",
-      "billing.read",
-      "settings.read",
+      PERMISSIONS.DASHBOARD_READ,
+      PERMISSIONS.ANALYTICS_READ,
+      PERMISSIONS.ORGANIZATIONS_READ,
+      PERMISSIONS.USERS_READ,
+      PERMISSIONS.BILLING_READ,
+      PERMISSIONS.SETTINGS_READ,
     ],
     initials: "AM",
   },
@@ -66,10 +51,13 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     name: "Jordan Lee",
     email: "member@demo.com",
     password: "password",
-    role: "member",
-    roleLabel: "Member",
+    role: APPLICATION_ROLES.MEMBER,
     organization: "Nova Studio",
-    permissions: ["dashboard.read", "analytics.read", "settings.read"],
+    permissions: [
+      PERMISSIONS.DASHBOARD_READ,
+      PERMISSIONS.ANALYTICS_READ,
+      PERMISSIONS.SETTINGS_READ,
+    ],
     initials: "JL",
   },
 ];
@@ -78,10 +66,7 @@ export const AUTH_STORAGE_KEY = "novasaas-demo-session";
 export const DEMO_AUTH_NOTICE =
   "Demo mode: this is a frontend-only session. No real credentials or tokens are used.";
 
-export function canAccess(
-  account: DemoAccount | null,
-  permission?: Permission,
-) {
+export function canAccess(account: DemoUser | null, permission?: Permission) {
   return !permission || Boolean(account?.permissions.includes(permission));
 }
 

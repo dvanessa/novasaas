@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { DEMO_ACCOUNTS } from "@/config/auth.config";
 import { authenticateDemoAccount } from "@/features/auth/services/demo-auth.service";
 import { useAuth } from "@/hooks/use-auth";
+import { ROLE_LABELS } from "@/types/auth";
 
 import { loginSchema, type LoginValues } from "../schemas/login.schema";
 
@@ -95,7 +96,7 @@ export function LoginForm() {
               <span className="text-left">
                 <span className="block text-sm">{account.name}</span>
                 <span className="text-muted-foreground block text-xs">
-                  {account.roleLabel} · {account.email}
+                  {ROLE_LABELS[account.role]} · {account.email}
                 </span>
               </span>
               <span className="text-muted-foreground text-xs">Use</span>

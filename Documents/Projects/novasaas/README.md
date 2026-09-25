@@ -148,6 +148,10 @@ their fixture password is kept in the configuration and is never persisted;
 persisted sessions contain only an account ID and timestamp. The Vitest suite
 covers schema validation and demo-session persistence.
 
+Authentication types are centralized in `src/types/auth.ts` and
+`src/types/permissions.ts`. Stable role identifiers are `super_admin`,
+`manager`, and `member`; human-readable role labels are presentation-only.
+
 The design-system showcase remains available at:
 
 A development showcase is available at:

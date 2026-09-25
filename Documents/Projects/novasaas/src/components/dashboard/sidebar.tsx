@@ -70,8 +70,7 @@ function SidebarContent({
   const filterItems = (items: typeof mainNavigation) =>
     items.filter(
       (item) =>
-        !item.permission ||
-        account?.permissions.includes(item.permission as never),
+        !item.permission || account?.permissions.includes(item.permission),
     );
   return (
     <div className="flex h-full flex-col gap-5 p-4">

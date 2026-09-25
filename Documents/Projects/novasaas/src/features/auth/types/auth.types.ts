@@ -1,13 +1,29 @@
-import type { DemoAccount, DemoRole } from "@/config/auth.config";
+import type {
+  ApplicationRole,
+  AuthenticationSession,
+  AuthenticationStatus,
+  DemoAccount,
+  DemoUser,
+  LoginCredentials,
+  ProtectedRouteConfiguration,
+} from "@/types/auth";
+import type { Permission } from "@/types/permissions";
 
 export type AuthState = {
-  account: DemoAccount | null;
+  account: DemoUser | null;
   hydrated: boolean;
+  status: AuthenticationStatus;
 };
 
-export type DemoCredentials = {
-  email: string;
-  password?: string;
-};
+export type DemoCredentials = LoginCredentials;
 
-export type { DemoAccount, DemoRole };
+export type {
+  ApplicationRole,
+  AuthenticationSession,
+  AuthenticationStatus,
+  DemoAccount,
+  DemoUser,
+  LoginCredentials,
+  Permission,
+  ProtectedRouteConfiguration,
+};

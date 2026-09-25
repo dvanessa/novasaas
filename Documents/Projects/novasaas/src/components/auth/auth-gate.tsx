@@ -3,9 +3,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { canAccess, type Permission } from "@/config/auth.config";
+import { canAccess } from "@/config/auth.config";
 import { getNavItem } from "@/config/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import type { Permission } from "@/types/permissions";
 
 export function AuthGate({
   children,
@@ -17,8 +18,8 @@ export function AuthGate({
   const pathname = usePathname();
   const router = useRouter();
   const { account, hydrated } = useAuth();
-  const requiredPermission =
-    permission ?? (getNavItem(pathname)?.permission as Permission | undefined);
+  const requiredPermission: Permission | undefined =
+    permission ?? getNavItem(pathname)?.permission;
 
   useEffect(() => {
     if (hydrated && !account) {

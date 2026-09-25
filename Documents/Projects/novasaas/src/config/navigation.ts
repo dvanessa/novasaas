@@ -15,6 +15,8 @@ import {
   Users,
 } from "lucide-react";
 
+import type { Permission } from "@/types/permissions";
+
 export type NavigationItem = {
   label: string;
   href: string;
@@ -23,7 +25,7 @@ export type NavigationItem = {
   keywords?: string[];
   badge?: string;
   disabled?: boolean;
-  permission?: string;
+  permission?: Permission;
   description?: string;
 };
 
