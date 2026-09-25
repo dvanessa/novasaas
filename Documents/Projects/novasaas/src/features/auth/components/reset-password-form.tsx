@@ -64,9 +64,14 @@ export function ResetPasswordForm() {
                 type="password"
                 autoComplete="new-password"
                 aria-invalid={Boolean(form.formState.errors.password)}
+                aria-describedby={
+                  form.formState.errors.password
+                    ? "new-password-error"
+                    : undefined
+                }
                 {...form.register("password")}
               />
-              <FormMessage>
+              <FormMessage id="new-password-error">
                 {form.formState.errors.password?.message}
               </FormMessage>
             </div>
@@ -77,9 +82,14 @@ export function ResetPasswordForm() {
                 type="password"
                 autoComplete="new-password"
                 aria-invalid={Boolean(form.formState.errors.confirmPassword)}
+                aria-describedby={
+                  form.formState.errors.confirmPassword
+                    ? "confirm-password-error"
+                    : undefined
+                }
                 {...form.register("confirmPassword")}
               />
-              <FormMessage>
+              <FormMessage id="confirm-password-error">
                 {form.formState.errors.confirmPassword?.message}
               </FormMessage>
             </div>
@@ -94,7 +104,7 @@ export function ResetPasswordForm() {
           </form>
         )}
         <Link
-          href="/auth/login"
+          href="/login"
           className="text-primary block text-center text-sm underline"
         >
           Return to sign in

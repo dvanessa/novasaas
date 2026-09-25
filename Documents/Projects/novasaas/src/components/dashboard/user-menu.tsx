@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { listDemoAccounts } from "@/features/auth/services/auth.service";
 import { useAuth } from "@/hooks/use-auth";
+import { hasPermission } from "@/lib/permissions";
 import { type DemoUser, ROLE_LABELS } from "@/types/auth";
+import { PERMISSIONS } from "@/types/permissions";
 
 export function UserMenu() {
   const { account, switchAccount, signOut } = useAuth();
   const [demoUsers, setDemoUsers] = useState<DemoUser[]>([]);
-  const [actionError, setActionError] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -56,54 +58,73 @@ export function UserMenu() {
           </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {demoUsers
-          .filter((candidate) => candidate.id !== account?.id)
-          .map((candidate) => (
+        <DropdownMenuLabel>Switch demo account</DropdownMenuLabel>
+        {demoUsers.map((candidate) =>
+          candidate.id === account?.id ? (
+            <DropdownMenuItem key={candidate.id} disabled>
+              Current: {candidate.name} · {ROLE_LABELS[candidate.role]}
+            </DropdownMenuItem>
+          ) : (
             <DropdownMenuItem
               key={candidate.id}
               onClick={async () => {
                 const result = await switchAccount(candidate.id);
-                if (!result.success) setActionError(result.error.message);
+                if (!result.success) {
+                  setActionMessage(result.error.message);
+                } else {
+                  setActionMessage(
+                    `Switched demo account to ${candidate.name}.`,
+                  );
+                }
               }}
             >
-              Switch to {candidate.name}
+              Use {candidate.name} · {ROLE_LABELS[candidate.role]}
             </DropdownMenuItem>
-          ))}
-        {actionError ? (
-          <p className="text-destructive px-2 py-1 text-xs" role="alert">
-            {actionError}
+          ),
+        )}
+        {actionMessage ? (
+          <p className="text-muted-foreground px-2 py-1 text-xs" role="status">
+            {actionMessage}
           </p>
         ) : null}
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/settings/profile">
-            <User className="mr-2 size-4" />
-            Profile
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings/organization">
-            <Settings className="mr-2 size-4" />
-            Organization settings
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings/billing">
-            <CreditCard className="mr-2 size-4" />
-            Billing
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings/appearance">
-            <Palette className="mr-2 size-4" />
-            Appearance
-          </Link>
-        </DropdownMenuItem>
+        {hasPermission(account, PERMISSIONS.SETTINGS_PROFILE_VIEW) ? (
+          <DropdownMenuItem asChild>
+            <Link href="/settings/profile">
+              <User className="mr-2 size-4" />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+        {hasPermission(account, PERMISSIONS.SETTINGS_ORGANIZATION_VIEW) ? (
+          <DropdownMenuItem asChild>
+            <Link href="/settings/organization">
+              <Settings className="mr-2 size-4" />
+              Organization settings
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+        {hasPermission(account, PERMISSIONS.SETTINGS_BILLING_VIEW) ? (
+          <DropdownMenuItem asChild>
+            <Link href="/settings/billing">
+              <CreditCard className="mr-2 size-4" />
+              Billing settings
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+        {hasPermission(account, PERMISSIONS.SETTINGS_APPEARANCE_VIEW) ? (
+          <DropdownMenuItem asChild>
+            <Link href="/settings/appearance">
+              <Palette className="mr-2 size-4" />
+              Appearance
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
             const result = await signOut();
-            if (!result.success) setActionError(result.error.message);
+            if (!result.success) setActionMessage(result.error.message);
           }}
         >
           <LogOut className="mr-2 size-4" />

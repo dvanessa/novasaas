@@ -19,7 +19,7 @@ export default function Home() {
           A frontend dashboard foundation for modern SaaS teams.
         </p>
         <Link
-          href="/auth/login"
+          href="/login"
           className="bg-primary text-primary-foreground inline-flex rounded-md px-5 py-2.5 text-sm font-medium"
         >
           Explore the demo

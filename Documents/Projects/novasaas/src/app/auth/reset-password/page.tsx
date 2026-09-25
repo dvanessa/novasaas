@@ -1,5 +1,5 @@
-import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
+import { redirect } from "next/navigation";
 
 export default function ResetPasswordPage() {
-  return <ResetPasswordForm />;
+  redirect("/reset-password");
 }

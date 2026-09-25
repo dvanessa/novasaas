@@ -6,20 +6,23 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { allNavigation } from "@/config/navigation";
+import { useAuth } from "@/hooks/use-auth";
+import { getVisibleNavigationItems } from "@/lib/navigation";
 
 export function CommandMenu() {
+  const { account } = useAuth();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const visibleNavigation = getVisibleNavigationItems(account);
   const results = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return allNavigation;
-    return allNavigation.filter((item) =>
+    if (!normalizedQuery) return visibleNavigation;
+    return visibleNavigation.filter((item) =>
       [item.label, item.description, ...(item.keywords ?? [])]
         .filter(Boolean)
         .some((value) => value!.toLowerCase().includes(normalizedQuery)),
     );
-  }, [query]);
+  }, [query, visibleNavigation]);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;

@@ -1,5 +1,5 @@
-import { VerifyEmailDemo } from "@/features/auth/components/verify-email-demo";
+import { redirect } from "next/navigation";
 
 export default function VerifyEmailPage() {
-  return <VerifyEmailDemo />;
+  redirect("/verify-email");
 }

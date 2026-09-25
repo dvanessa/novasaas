@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import { SessionLoading } from "@/components/auth/session-loading";
 import { useAuth } from "@/hooks/use-auth";
 
 export function GuestGuard({ children }: { children: React.ReactNode }) {
@@ -11,6 +12,6 @@ export function GuestGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (hydrated && account) router.replace("/dashboard");
   }, [account, hydrated, router]);
-  if (!hydrated || account) return null;
+  if (!hydrated || account) return <SessionLoading />;
   return children;
 }

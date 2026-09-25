@@ -3,9 +3,8 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { canAccess } from "@/config/auth.config";
-import { getNavItem } from "@/config/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { canAccessRoute, hasPermission } from "@/lib/permissions";
 import type { Permission } from "@/types/permissions";
 
 export function AuthGate({
@@ -18,21 +17,32 @@ export function AuthGate({
   const pathname = usePathname();
   const router = useRouter();
   const { account, hydrated } = useAuth();
-  const requiredPermission: Permission | undefined =
-    permission ?? getNavItem(pathname)?.permission;
+  const allowed = permission
+    ? hasPermission(account, permission)
+    : canAccessRoute(account, pathname);
 
   useEffect(() => {
     if (hydrated && !account) {
-      router.replace(`/auth/login?next=${encodeURIComponent(pathname)}`);
-    } else if (hydrated && account && !canAccess(account, requiredPermission)) {
+      router.replace(`/login?returnTo=${encodeURIComponent(pathname)}`);
+    } else if (hydrated && account && !allowed) {
       router.replace(`/forbidden?from=${encodeURIComponent(pathname)}`);
     }
-  }, [account, hydrated, pathname, requiredPermission, router]);
+  }, [account, allowed, hydrated, pathname, router]);
 
-  if (!hydrated || !account || !canAccess(account, requiredPermission)) {
+  if (!hydrated || !account || !allowed) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <p className="text-muted-foreground text-sm">Checking demo session…</p>
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <div
+          className="w-full max-w-sm space-y-4 px-6"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="text-muted-foreground text-center text-sm">
+            Checking your demo session and page access…
+          </p>
+          <div className="bg-muted h-2 animate-pulse rounded-full motion-reduce:animate-none" />
+          <div className="bg-muted mx-auto h-2 w-2/3 animate-pulse rounded-full motion-reduce:animate-none" />
+        </div>
       </div>
     );
   }

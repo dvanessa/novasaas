@@ -1,54 +1,67 @@
 "use client";
 
+import { MailCheck, RotateCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 import { DemoNotice } from "@/components/auth/demo-notice";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { verifyEmail } from "@/features/auth/services/auth.service";
+import { resendVerificationEmail } from "@/features/auth/services/auth.service";
 
-export function VerifyEmailDemo() {
+export function VerifyEmailDemo({ email }: { email: string }) {
   const [verifying, setVerifying] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [message, setMessage] = useState("");
 
-  async function verify() {
+  async function resend() {
     setVerifying(true);
-    const result = await verifyEmail();
+    const result = await resendVerificationEmail(email);
     setVerifying(false);
-    if (result.success) setVerified(result.data.verified);
+    if (result.success) {
+      setMessage(result.data.message);
+    }
   }
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Verify your email</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <MailCheck className="text-primary size-5" aria-hidden="true" />
+          Check your email
+        </CardTitle>
         <p className="text-muted-foreground text-sm">
           Email verification is simulated for this frontend demo.
         </p>
       </CardHeader>
       <CardContent className="space-y-5">
         <DemoNotice />
-        {verified ? (
-          <p className="text-sm" role="status">
-            Demo email verified. No email was sent.
+        <p className="text-sm">
+          {email
+            ? `A confirmation step is ready for ${email}.`
+            : "A confirmation step is ready for your demo address."}{" "}
+          This is a visual demo; no account was created and no message was sent.
+        </p>
+        {message ? (
+          <p className="text-sm" role="status" aria-live="polite">
+            {message}
           </p>
-        ) : (
+        ) : null}
+        <div className="space-y-3">
           <Button
             type="button"
+            variant="outline"
             className="w-full"
             loading={verifying}
-            loadingText="Verifying demo email…"
-            onClick={() => void verify()}
+            loadingText="Preparing demo resend…"
+            onClick={() => void resend()}
           >
-            Verify demo email
+            <RotateCw aria-hidden="true" />
+            Resend demo confirmation
           </Button>
-        )}
-        <Link href="/auth/login" className="w-full">
-          <Button variant="outline" className="w-full">
-            Continue to demo sign in
-          </Button>
-        </Link>
+          <Link href="/login" className="block w-full">
+            <Button className="w-full">Return to sign in</Button>
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

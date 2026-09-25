@@ -19,7 +19,7 @@ import {
 } from "../schemas/forgot-password.schema";
 
 export function ForgotPasswordForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
@@ -35,17 +35,16 @@ export function ForgotPasswordForm() {
       </CardHeader>
       <CardContent className="space-y-5">
         <DemoNotice />
-        {submitted ? (
-          <p className="text-sm" role="status">
-            Demo recovery instructions were prepared. Continue to the reset
-            password demonstration.
+        {successMessage ? (
+          <p className="text-sm" role="status" aria-live="polite">
+            {successMessage}
           </p>
         ) : (
           <form
             onSubmit={form.handleSubmit(async (values) => {
               const result = await requestPasswordReset(values.email);
               if (result.success) {
-                setSubmitted(true);
+                setSuccessMessage(result.data.message);
               } else {
                 form.setError("root.serverError", {
                   message: result.error.message,
@@ -65,9 +64,16 @@ export function ForgotPasswordForm() {
                 type="email"
                 autoComplete="email"
                 aria-invalid={Boolean(form.formState.errors.email)}
+                aria-describedby={
+                  form.formState.errors.email
+                    ? "recovery-email-error"
+                    : undefined
+                }
                 {...form.register("email")}
               />
-              <FormMessage>{form.formState.errors.email?.message}</FormMessage>
+              <FormMessage id="recovery-email-error">
+                {form.formState.errors.email?.message}
+              </FormMessage>
             </div>
             <Button
               className="w-full"
@@ -81,7 +87,7 @@ export function ForgotPasswordForm() {
         )}
         <Link
           className="text-primary block text-center text-sm underline"
-          href="/auth/login"
+          href="/login"
         >
           Back to demo sign in
         </Link>

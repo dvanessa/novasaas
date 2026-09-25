@@ -56,8 +56,10 @@ export type ProtectedRouteConfiguration = {
 };
 
 export type RegistrationData = {
-  workspace: string;
+  fullName: string;
   email: string;
+  password: string;
+  acceptedTerms: boolean;
 };
 
 export type PasswordResetData = {

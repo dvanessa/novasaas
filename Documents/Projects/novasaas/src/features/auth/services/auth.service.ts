@@ -48,11 +48,11 @@ export async function logout(): Promise<AuthResult<null>> {
 
 export async function register(
   data: RegistrationData,
-): Promise<AuthResult<{ workspace: string; email: string }>> {
+): Promise<AuthResult<{ fullName: string; email: string }>> {
   await simulateNetworkDelay();
   return {
     success: true,
-    data: { workspace: data.workspace.trim(), email: data.email.trim() },
+    data: { fullName: data.fullName.trim(), email: data.email.trim() },
   };
 }
 
@@ -66,7 +66,7 @@ export async function requestPasswordReset(
     success: true,
     data: {
       message:
-        "If an account matches that email, demo recovery instructions are ready.",
+        "If an account exists for that email, reset instructions have been prepared.",
     },
   };
 }
@@ -93,6 +93,19 @@ export async function resetPassword(
 export async function verifyEmail(): Promise<AuthResult<{ verified: true }>> {
   await simulateNetworkDelay();
   return { success: true, data: { verified: true } };
+}
+
+export async function resendVerificationEmail(
+  email: string,
+): Promise<AuthResult<{ message: string }>> {
+  void email;
+  await simulateNetworkDelay();
+  return {
+    success: true,
+    data: {
+      message: "Demo confirmation instructions are ready. No email was sent.",
+    },
+  };
 }
 
 export async function listDemoAccounts(): Promise<DemoUser[]> {

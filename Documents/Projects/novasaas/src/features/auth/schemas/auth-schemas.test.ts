@@ -17,8 +17,11 @@ describe("auth schemas", () => {
     ).toBe(true);
     expect(
       registerSchema.safeParse({
-        workspace: "Nova Workspace",
+        fullName: "Nova User",
         email: "team@example.com",
+        password: "secure123",
+        confirmPassword: "secure123",
+        acceptedTerms: true,
       }).success,
     ).toBe(true);
   });
@@ -28,10 +31,38 @@ describe("auth schemas", () => {
       false,
     );
     expect(
-      registerSchema.safeParse({ workspace: "N", email: "team@example.com" })
-        .success,
+      registerSchema.safeParse({
+        fullName: "N",
+        email: "team@example.com",
+        password: "short",
+        confirmPassword: "short",
+        acceptedTerms: false,
+      }).success,
     ).toBe(false);
     expect(forgotPasswordSchema.safeParse({ email: "" }).success).toBe(false);
+  });
+
+  it("requires accepted demo terms and secure-enough matching registration passwords", () => {
+    const validRegistration = {
+      fullName: "Nova User",
+      email: "team@example.com",
+      password: "secure123",
+      confirmPassword: "secure123",
+      acceptedTerms: true,
+    };
+    expect(registerSchema.safeParse(validRegistration).success).toBe(true);
+    expect(
+      registerSchema.safeParse({
+        ...validRegistration,
+        acceptedTerms: false,
+      }).success,
+    ).toBe(false);
+    expect(
+      registerSchema.safeParse({
+        ...validRegistration,
+        confirmPassword: "different123",
+      }).success,
+    ).toBe(false);
   });
 
   it("requires matching passwords with a minimum length", () => {

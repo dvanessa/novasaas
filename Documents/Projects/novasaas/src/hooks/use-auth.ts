@@ -3,6 +3,8 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 
+import { canAccessRoute } from "@/lib/permissions";
+import { getSafeReturnUrl } from "@/lib/safe-return-url";
 import {
   getAuthStoreServerSnapshot,
   getAuthStoreSnapshot,
@@ -28,9 +30,9 @@ export function useAuth() {
   }, []);
 
   const signIn = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials, returnTo?: string) => {
       const result = await loginToStore(credentials);
-      if (result.success) router.push("/dashboard");
+      if (result.success) router.replace(getSafeReturnUrl(returnTo));
       return result;
     },
     [router],
@@ -39,19 +41,19 @@ export function useAuth() {
   const switchAccount = useCallback(
     async (accountId: string) => {
       const result = await switchStoreAccount(accountId);
-      if (result.success) router.push("/dashboard");
+      if (result.success && !canAccessRoute(result.data, pathname)) {
+        router.replace("/dashboard");
+      }
       return result;
     },
-    [router],
+    [pathname, router],
   );
 
   const signOut = useCallback(async () => {
     const result = await logoutFromStore();
-    if (result.success) {
-      router.push(`/auth/login?next=${encodeURIComponent(pathname)}`);
-    }
+    if (result.success) router.replace("/login");
     return result;
-  }, [pathname, router]);
+  }, [router]);
 
   return {
     account: currentUser,

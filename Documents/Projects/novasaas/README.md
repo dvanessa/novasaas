@@ -4,9 +4,9 @@ NovaSaaS is a premium foundation for a modern SaaS admin dashboard.
 
 ## Current status
 
-**Step 4 — Frontend Demo Authentication**
+**Step 4 — Demo Authentication and Permissions**
 
-This project includes the Step 1 foundation, Step 2 design system, Step 3 dashboard shell, and a frontend-only demo authentication layer with persisted sessions, demo roles, permission checks, protected routes, and forbidden-state handling. No production authentication is implemented.
+This project includes the Step 1 foundation, Step 2 design system, Step 3 dashboard shell, and a browser-only demo authentication experience with typed roles, permissions, protected routes, and access-denied handling. It is not production-auth-ready.
 
 ## Technology stack
 
@@ -88,7 +88,7 @@ Behavior:
 
 - Default theme is `system`
 - Light, dark, and system modes are supported
-- Theme changes are applied without hydration mismatches thanks to `suppressHydrationWarning` on the root html element
+- The theme selector renders a stable system icon until client theme state is available; the root `html` element suppresses the intentional theme-attribute difference
 - The UI relies on semantic CSS variables defined in `src/app/globals.css`
 
 ## Design tokens
@@ -136,30 +136,65 @@ Available components in `src/components/ui/`:
 
 ## Routes
 
-Authentication demonstrations are available at `/auth/login`, `/auth/register`, `/auth/signup`, `/auth/forgot-password`, `/auth/reset-password`, and `/auth/verify-email`. Demo sessions are stored in browser local storage only. The dashboard at `/dashboard` is protected, and insufficient permissions route to `/forbidden`. Use the demo account switcher in the user menu to explore Super Admin, Manager, and Member roles.
+Authentication demonstrations are available at `/login`, `/register`, `/forgot-password`, `/reset-password`, and `/verify-email`. Demo sessions are stored in browser local storage only. The dashboard route group is protected by client-side presentation guards; insufficient permissions route to `/forbidden`. The demo account switcher in the user menu lets you explicitly switch between roles.
 
-The dashboard placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
+### Public demo credentials
+
+| Name           | Email              | Role        |
+| -------------- | ------------------ | ----------- |
+| Vanessa Duarte | `admin@demo.com`   | Super Admin |
+| Alex Morgan    | `manager@demo.com` | Manager     |
+| Jordan Lee     | `member@demo.com`  | Member      |
+
+All three use the shared demo-only password `password`. These public fixture credentials exist in frontend code exclusively for the demonstration.
+
+### Role and permission model
+
+Stable role identifiers and the centralized permission map are defined in
+`src/types/auth.ts`, `src/types/permissions.ts`, and
+`src/config/permissions.config.ts`.
+
+- **Super Admin:** all declared permissions.
+- **Manager:** dashboard and analytics; organization viewing/management; user
+  viewing, inviting, and editing; subscription viewing; notification viewing
+  and management; audit-log viewing; profile and organization settings view /
+  edit; appearance settings view / edit.
+- **Member:** dashboard and notifications; own profile view / edit; appearance
+  settings view / edit.
+
+Navigation, command search, and settings links are derived from the same
+permission-filtered navigation source. Direct route access is separately
+checked against the most-specific matching entry in
+`src/config/route-permissions.config.ts`. `PermissionGuard` and action examples
+only control the demo UI; they are not security boundaries.
+
+### Login and session flow
+
+Login validates email and password, simulates an asynchronous service request,
+and redirects to `/dashboard` or a sanitized internal `returnTo` destination.
+Quick-login cards require an explicit click. Registration is temporary demo
+behavior and navigates to the verification demonstration; it does not create a
+permanent account. Password recovery always returns the same generic response.
+
+The dedicated store at `src/stores/auth.store.ts` owns session hydration. It
+persists only the versioned `novasaas-demo-session` record (`version`,
+`accountId`, and `createdAt`); invalid or outdated values are discarded.
+Passwords, credentials, tokens, and user records are not persisted. A loading
+state is rendered before hydration and authorization to avoid a protected
+content flash. Authentication operations are abstracted asynchronously in
+`src/features/auth/services/auth.service.ts`; registration, password recovery,
+and password reset remain simulated frontend demonstrations and do not call a
+backend or send email. The demo accounts are centralized in
+`src/config/auth.config.ts`, and their fixture password is never persisted.
 
 Auth forms use React Hook Form with Zod schemas and accessible field-level
-messages. Registration, password recovery, and password reset remain simulated
-frontend demonstrations; they do not send emails, store passwords, or call a
-backend. The demo accounts are centralized in `src/config/auth.config.ts`;
-their fixture password is kept in the configuration and is never persisted;
-persisted sessions contain only an account ID and timestamp. The Vitest suite
-covers schema validation and demo-session persistence.
+messages. Authentication types are centralized in `src/types/auth.ts` and
+`src/types/permissions.ts`; stable role identifiers are `super_admin`,
+`manager`, and `member`. The Vitest suite covers schemas, session persistence,
+permission policy, route access, and auth UI behavior. Run `npm run test`; use
+`npm run test:watch` while developing.
 
-Authentication types are centralized in `src/types/auth.ts` and
-`src/types/permissions.ts`. Stable role identifiers are `super_admin`,
-`manager`, and `member`; human-readable role labels are presentation-only.
-
-Authentication operations are abstracted in
-`src/features/auth/services/auth.service.ts` and return typed async results.
-The client-side store in `src/stores/auth.store.ts` owns session hydration and
-storage. It persists only the versioned `novasaas-demo-session` record
-(`version`, `accountId`, and `createdAt`); invalid or outdated records are
-discarded. Fixture passwords and credentials are never persisted.
-
-The design-system showcase remains available at:
+The dashboard placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
 
 A development showcase is available at:
 
@@ -208,7 +243,26 @@ To add a new component variant:
 
 ## Frontend-only project status
 
-This project remains frontend-only. Step 4 authentication is intentionally simulated: there is no backend, database, API layer, OAuth, JWT, password encryption, real token, or payment processing. Replace the demo auth service with a real server-backed identity system before production use.
+This project remains frontend-only. Authentication and route guards are
+simulated in the browser. There is no backend, database, API route, OAuth, JWT,
+password hashing/encryption, real token, or payment processing.
+
+### Security limitations and ASP.NET Core replacement
+
+- Client-side route guards do **not** secure data or replace server-side
+  authorization.
+- Hiding UI and using `PermissionGuard` do **not** replace authorization checks
+  at the data/API boundary.
+- Public demo passwords are fixture values. Production passwords and secrets
+  must never be shipped in frontend code or exposed through `NEXT_PUBLIC_*`.
+- Production sessions should use a suitable secure server-side design; do not
+  copy this localStorage demo session into production.
+- When integrating ASP.NET Core, replace the operations in
+  `src/features/auth/services/auth.service.ts` with calls to the backend, let
+  the backend establish and validate the real session, and enforce every
+  permission on every protected endpoint and data operation. Keep the UI
+  permission map only as a presentation aid.
+- Do not add fake JWTs, fake cryptography, or client-only claims of security.
 
 ## Folder structure
 

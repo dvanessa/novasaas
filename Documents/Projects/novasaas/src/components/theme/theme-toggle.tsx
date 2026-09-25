@@ -2,6 +2,7 @@
 
 import { Monitor, MoonStar, SunMedium } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +18,26 @@ const THEME_OPTIONS = [
   { value: "system", label: "System", icon: Monitor },
 ] as const;
 
+function subscribeMounted() {
+  return () => {};
+}
+
+function getMountedSnapshot() {
+  return true;
+}
+
+function getServerMountedSnapshot() {
+  return false;
+}
+
 export function ThemeToggle() {
   const { resolvedTheme, theme, setTheme } = useTheme();
-  const activeTheme = resolvedTheme ?? theme ?? "system";
+  const mounted = useSyncExternalStore(
+    subscribeMounted,
+    getMountedSnapshot,
+    getServerMountedSnapshot,
+  );
+  const activeTheme = mounted ? (resolvedTheme ?? theme ?? "system") : "system";
   const currentTheme =
     THEME_OPTIONS.find((option) => option.value === activeTheme) ??
     THEME_OPTIONS[2];

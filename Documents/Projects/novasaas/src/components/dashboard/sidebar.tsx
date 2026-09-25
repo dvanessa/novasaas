@@ -6,13 +6,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  mainNavigation,
-  settingsNavigation,
-  utilityNavigation,
-  workspaceNavigation,
-} from "@/config/navigation";
+import type { NavigationItem } from "@/config/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { getVisibleNavigation } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 import { AppLogo } from "./app-logo";
@@ -26,11 +22,13 @@ function NavGroup({
   collapsed = false,
 }: {
   title: string;
-  items: typeof mainNavigation;
+  items: NavigationItem[];
   pathname: string;
   onNavigate?: () => void;
   collapsed?: boolean;
 }) {
+  if (!items.length) return null;
+
   return (
     <div className="space-y-1">
       {!collapsed && (
@@ -67,11 +65,10 @@ function SidebarContent({
 }) {
   const pathname = usePathname();
   const { account } = useAuth();
-  const filterItems = (items: typeof mainNavigation) =>
-    items.filter(
-      (item) =>
-        !item.permission || account?.permissions.includes(item.permission),
-    );
+  const visibleNavigation = getVisibleNavigation(account);
+  const visibleItems = visibleNavigation.filter((item) => !item.children);
+  const visibleChildren = (href: string) =>
+    visibleNavigation.find((item) => item.href === href)?.children ?? [];
   return (
     <div className="flex h-full flex-col gap-5 p-4">
       <AppLogo />
@@ -79,28 +76,21 @@ function SidebarContent({
       <nav className="flex-1 space-y-6 overflow-y-auto">
         <NavGroup
           title="Workspace"
-          items={filterItems(mainNavigation)}
+          items={visibleItems}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
         />
         <NavGroup
           title="Operations"
-          items={filterItems(workspaceNavigation)}
+          items={visibleChildren("/billing")}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
         />
         <NavGroup
           title="Settings"
-          items={filterItems(settingsNavigation)}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          collapsed={collapsed}
-        />
-        <NavGroup
-          title="Support"
-          items={filterItems(utilityNavigation)}
+          items={visibleChildren("/settings")}
           pathname={pathname}
           onNavigate={onNavigate}
           collapsed={collapsed}
