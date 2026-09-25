@@ -1,3 +1,7 @@
-export function validateLogin(values: { email: string }) {
-  return values.email.includes("@") ? null : "Enter a valid demo email.";
-}
+import { z } from "zod";
+
+export const loginSchema = z.object({
+  email: z.string().trim().email("Enter a valid demo email address."),
+});
+
+export type LoginValues = z.infer<typeof loginSchema>;

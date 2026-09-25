@@ -1,3 +1,5 @@
-import SignupPage from "@/app/auth/signup/page";
+import { RegisterForm } from "@/features/auth/components/register-form";
 
-export default SignupPage;
+export default function RegisterPage() {
+  return <RegisterForm />;
+}

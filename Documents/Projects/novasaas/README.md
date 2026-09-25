@@ -18,6 +18,8 @@ This project includes the Step 1 foundation, Step 2 design system, Step 3 dashbo
 - Class Variance Authority
 - Lucide React icons
 - next-themes
+- React Hook Form, Zod, and `@hookform/resolvers`
+- Vitest and React Testing Library
 - ESLint and Prettier
 - npm
 
@@ -44,6 +46,12 @@ Run linting:
 
 ```bash
 npm run lint
+```
+
+Run the automated tests:
+
+```bash
+npm run test
 ```
 
 Check types:
@@ -131,6 +139,11 @@ Available components in `src/components/ui/`:
 Authentication demonstrations are available at `/auth/login`, `/auth/register`, `/auth/signup`, `/auth/forgot-password`, `/auth/reset-password`, and `/auth/verify-email`. Demo sessions are stored in browser local storage only. The dashboard at `/dashboard` is protected, and insufficient permissions route to `/forbidden`. Use the demo account switcher in the user menu to explore owner, admin, and member roles.
 
 The dashboard placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
+
+Auth forms use React Hook Form with Zod schemas and accessible field-level
+messages. Registration, password recovery, and password reset remain simulated
+frontend demonstrations; they do not send emails, store passwords, or call a
+backend. The Vitest suite covers schema validation and demo-session persistence.
 
 The design-system showcase remains available at:
 
