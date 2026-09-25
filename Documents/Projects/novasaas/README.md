@@ -4,9 +4,9 @@ NovaSaaS is a premium foundation for a modern SaaS admin dashboard.
 
 ## Current status
 
-**Step 3 — Dashboard Shell**
+**Step 4 — Frontend Demo Authentication**
 
-This project now includes a responsive dashboard shell with typed navigation, desktop/mobile sidebar, sticky header, breadcrumbs, command menu, organization and user menus, notifications preview, settings layout, and placeholder screens for each planned route. Business data, authentication, permissions, charts, and real tables remain intentionally deferred.
+This project includes the Step 1 foundation, Step 2 design system, Step 3 dashboard shell, and a frontend-only demo authentication layer with persisted sessions, demo roles, permission checks, protected routes, and forbidden-state handling. No production authentication is implemented.
 
 ## Technology stack
 
@@ -128,7 +128,9 @@ Available components in `src/components/ui/`:
 
 ## Routes
 
-The dashboard is available at `/dashboard`. Placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
+Authentication demonstrations are available at `/auth/login`, `/auth/register`, `/auth/signup`, `/auth/forgot-password`, `/auth/reset-password`, and `/auth/verify-email`. Demo sessions are stored in browser local storage only. The dashboard at `/dashboard` is protected, and insufficient permissions route to `/forbidden`. Use the demo account switcher in the user menu to explore owner, admin, and member roles.
+
+The dashboard placeholder routes include `/analytics`, `/organizations`, `/users`, `/roles`, `/subscriptions`, `/billing`, `/billing/invoices`, `/notifications`, `/audit-log`, and `/settings` with `/settings/appearance`, `/settings/billing`, `/settings/organization`, `/settings/profile`, and `/settings/security`. Use **Cmd/Ctrl+K** to open the command menu. The root page remains a minimal entry page with a dashboard link.
 
 The design-system showcase remains available at:
 
@@ -179,7 +181,7 @@ To add a new component variant:
 
 ## Frontend-only project status
 
-This project remains frontend-only. There is no authentication, backend, database, API layer, or payment processing implemented in this repository.
+This project remains frontend-only. Step 4 authentication is intentionally simulated: there is no backend, database, API layer, OAuth, JWT, password encryption, real token, or payment processing. Replace the demo auth service with a real server-backed identity system before production use.
 
 ## Folder structure
 
