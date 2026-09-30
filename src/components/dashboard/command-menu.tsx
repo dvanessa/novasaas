@@ -45,7 +45,7 @@ export function CommandMenu() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="border-input bg-background text-muted-foreground hover:bg-accent flex h-9 w-full items-center gap-2 rounded-md border px-3 text-sm md:max-w-xs"
+        className="border-input bg-background text-muted-foreground hover:bg-accent flex h-9 w-full min-w-0 items-center gap-2 rounded-md border px-3 text-sm"
         aria-label="Open command menu"
       >
         <Search className="size-4" />

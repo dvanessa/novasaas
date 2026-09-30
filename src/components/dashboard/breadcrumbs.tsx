@@ -17,24 +17,27 @@ export function Breadcrumbs() {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="text-muted-foreground flex items-center gap-1.5 text-sm"
+      className="text-muted-foreground flex min-w-0 items-center gap-1.5 overflow-hidden text-sm"
     >
-      <Link href="/dashboard" className="hover:text-foreground">
+      <Link href="/dashboard" className="hover:text-foreground shrink-0">
         <Home className="size-3.5" />
       </Link>
       {crumbs
         .filter((crumb) => crumb.href !== "/dashboard")
         .map((crumb, index, visibleCrumbs) => (
-          <span key={crumb.href} className="flex items-center gap-1.5">
-            <ChevronRight className="size-3.5" />
+          <span key={crumb.href} className="flex min-w-0 items-center gap-1.5">
+            <ChevronRight className="size-3.5 shrink-0" />
             {index === visibleCrumbs.length - 1 ? (
-              <span aria-current="page" className="text-foreground capitalize">
+              <span
+                aria-current="page"
+                className="text-foreground min-w-0 truncate capitalize"
+              >
                 {crumb.label}
               </span>
             ) : (
               <Link
                 href={crumb.href}
-                className="hover:text-foreground capitalize"
+                className="hover:text-foreground min-w-0 truncate capitalize"
               >
                 {crumb.label}
               </Link>

@@ -10,7 +10,7 @@ export function PageContainer({
   children?: ReactNode;
 }) {
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 space-y-8 p-4 sm:p-6 lg:p-8">
+    <main className="mx-auto w-full max-w-7xl min-w-0 space-y-8 p-4 sm:p-6 lg:p-8">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         {description && (
