@@ -13,19 +13,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function NotificationsPreview() {
-  const [unread, setUnread] = useState(5);
+export function NotificationsPreview({
+  initialUnreadCount = 5,
+}: {
+  initialUnreadCount?: number;
+}) {
+  const [unread, setUnread] = useState(initialUnreadCount);
+  const unreadLabel = unread > 99 ? "99+" : String(unread);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell className="size-4" />
-          {unread > 0 && (
-            <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex min-h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold">
-              {unread}
-            </span>
-          )}
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={
+            unread > 0
+              ? `Notifications, ${unreadLabel} unread`
+              : "Notifications"
+          }
+        >
+          <span className="relative inline-flex">
+            <Bell className="size-4" aria-hidden="true" />
+            {unread > 0 && (
+              <span
+                aria-hidden="true"
+                className="bg-primary text-primary-foreground pointer-events-none absolute -top-1 -right-1 flex min-h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-none font-semibold"
+              >
+                {unreadLabel}
+              </span>
+            )}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">

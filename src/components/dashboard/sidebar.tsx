@@ -6,6 +6,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { NavigationItem } from "@/config/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { getVisibleNavigation } from "@/lib/navigation";
@@ -36,22 +42,38 @@ function NavGroup({
           {title}
         </p>
       )}
-      {items.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={onNavigate}
-          className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-            pathname === item.href
-              ? "bg-accent text-accent-foreground"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground",
-          )}
-        >
-          <item.icon className="size-4 shrink-0" />
-          {!collapsed && item.label}
-        </Link>
-      ))}
+      {items.map((item) => {
+        const link = (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            aria-label={collapsed ? item.label : undefined}
+            aria-current={pathname === item.href ? "page" : undefined}
+            className={cn(
+              "flex min-w-0 items-center gap-3 rounded-md py-2 text-sm font-medium transition-colors",
+              collapsed ? "justify-center px-2" : "px-3",
+              pathname === item.href
+                ? "bg-accent text-accent-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+            )}
+          >
+            <item.icon className="size-4 shrink-0" />
+            {!collapsed && (
+              <span className="min-w-0 truncate">{item.label}</span>
+            )}
+          </Link>
+        );
+
+        return collapsed ? (
+          <Tooltip key={item.href}>
+            <TooltipTrigger asChild>{link}</TooltipTrigger>
+            <TooltipContent side="right">{item.label}</TooltipContent>
+          </Tooltip>
+        ) : (
+          link
+        );
+      })}
     </div>
   );
 }
@@ -70,36 +92,43 @@ function SidebarContent({
   const visibleChildren = (href: string) =>
     visibleNavigation.find((item) => item.href === href)?.children ?? [];
   return (
-    <div className="flex h-full flex-col gap-5 p-4">
-      <AppLogo />
-      {!collapsed && <OrganizationSwitcher />}
-      <nav className="flex-1 space-y-6 overflow-y-auto">
-        <NavGroup
-          title="Workspace"
-          items={visibleItems}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          collapsed={collapsed}
-        />
-        <NavGroup
-          title="Operations"
-          items={visibleChildren("/billing")}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          collapsed={collapsed}
-        />
-        <NavGroup
-          title="Settings"
-          items={visibleChildren("/settings")}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          collapsed={collapsed}
-        />
-      </nav>
-      {!collapsed && (
-        <p className="text-muted-foreground px-2 text-xs">NovaSaaS v0.1.0</p>
-      )}
-    </div>
+    <TooltipProvider>
+      <div className="flex h-full min-h-0 min-w-0 flex-col gap-5 overflow-hidden p-4 pb-16">
+        <AppLogo collapsed={collapsed} />
+        {!collapsed && <OrganizationSwitcher />}
+        <nav
+          aria-label="Primary"
+          className="-mx-1 min-h-0 min-w-0 flex-1 space-y-6 overflow-x-hidden overflow-y-auto overscroll-contain px-1"
+        >
+          <NavGroup
+            title="Workspace"
+            items={visibleItems}
+            pathname={pathname}
+            onNavigate={onNavigate}
+            collapsed={collapsed}
+          />
+          <NavGroup
+            title="Operations"
+            items={visibleChildren("/billing")}
+            pathname={pathname}
+            onNavigate={onNavigate}
+            collapsed={collapsed}
+          />
+          <NavGroup
+            title="Settings"
+            items={visibleChildren("/settings")}
+            pathname={pathname}
+            onNavigate={onNavigate}
+            collapsed={collapsed}
+          />
+        </nav>
+        {!collapsed && (
+          <p className="text-muted-foreground min-w-0 truncate px-2 text-xs">
+            NovaSaaS v0.1.0
+          </p>
+        )}
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -150,7 +179,7 @@ export function Sidebar() {
     <>
       <aside
         className={cn(
-          "bg-sidebar hidden shrink-0 border-r transition-[width] duration-200 lg:block",
+          "bg-sidebar relative hidden h-dvh shrink-0 border-r transition-[width] duration-200 lg:flex lg:flex-col",
           collapsed ? "w-20" : "w-64",
         )}
       >
@@ -190,7 +219,7 @@ export function Sidebar() {
             aria-label="Close navigation"
             onClick={() => setOpen(false)}
           />
-          <aside className="bg-sidebar relative z-10 h-full w-72 border-r">
+          <aside className="bg-sidebar relative z-10 h-dvh max-h-dvh w-[min(18rem,calc(100vw-2rem))] border-r">
             <SidebarContent onNavigate={() => setOpen(false)} />
           </aside>
         </div>
