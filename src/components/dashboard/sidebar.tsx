@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { appConfig } from "@/config/app.config";
 import type { NavigationItem } from "@/config/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { getVisibleNavigation } from "@/lib/navigation";
@@ -124,7 +125,7 @@ function SidebarContent({
         </nav>
         {!collapsed && (
           <p className="text-muted-foreground min-w-0 truncate px-2 text-xs">
-            NovaSaaS v0.1.0
+            {appConfig.name} v{appConfig.version}
           </p>
         )}
       </div>
