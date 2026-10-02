@@ -1,7 +1,8 @@
 export const appConfig = {
   name: "NovaSaaS",
-  fullName: "NovaSaaS — Premium Next.js Admin Dashboard",
-  description: "A premium foundation for a modern SaaS admin dashboard.",
+  fullName: "NovaSaaS Free — Next.js Admin Dashboard Starter",
+  description:
+    "A polished, responsive admin dashboard starter built with Next.js, TypeScript, and Tailwind CSS.",
   locale: "en",
-  version: "0.1.0",
+  version: "1.0.0",
 } as const;

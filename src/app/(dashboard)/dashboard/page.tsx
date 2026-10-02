@@ -1,26 +1,13 @@
-import { FeaturePlaceholder } from "@/components/dashboard/feature-placeholder";
+import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import { PageContainer } from "@/components/dashboard/page-container";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
   return (
     <PageContainer
-      title="Welcome to NovaSaaS"
-      description="Your workspace overview will appear here as features are connected."
+      title="Dashboard"
+      description="Monitor your workspace performance and recent activity."
     >
-      <div className="grid min-w-0 gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((card) => (
-          <Card key={card} className="max-w-full min-w-0">
-            <CardContent className="space-y-3 pt-6">
-              <Skeleton className="h-4 w-28" />
-              <Skeleton className="h-8 w-20" />
-              <Skeleton className="h-3 w-36" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <FeaturePlaceholder title="Dashboard activity" />
+      <DashboardOverview />
     </PageContainer>
   );
 }

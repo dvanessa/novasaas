@@ -18,8 +18,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: appConfig.fullName,
+  metadataBase: new URL("https://novasaas-v1.netlify.app"),
+  title: {
+    default: appConfig.fullName,
+    template: `%s | ${appConfig.name}`,
+  },
   description: appConfig.description,
+  applicationName: appConfig.name,
+  keywords: [
+    "Next.js admin dashboard",
+    "SaaS dashboard",
+    "TypeScript starter",
+    "Tailwind CSS dashboard",
+  ],
+  authors: [{ name: "Vanessa Duarte" }],
+  creator: "Vanessa Duarte",
+  openGraph: {
+    type: "website",
+    siteName: appConfig.name,
+    title: appConfig.fullName,
+    description: appConfig.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: appConfig.fullName,
+    description: appConfig.description,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
