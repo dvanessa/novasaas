@@ -7,6 +7,8 @@ connect to your own API, database, authentication provider, and business logic.
 [View the live demo](https://novasaas-v1.netlify.app/) ·
 [Open the dashboard](https://novasaas-v1.netlify.app/login)
 
+![NovaSaaS Free dashboard](public/images/novasaas-dashboard.jpg)
+
 ## Highlights
 
 - Responsive application shell with desktop and mobile navigation
@@ -155,6 +157,26 @@ NovaSaaS Free contains the reusable shell, dashboard overview, design system,
 demo authentication, and permission foundations. A separate future Pro edition
 may add advanced data tables, CRUD workflows, organizations, configurable
 roles, billing screens, richer analytics, API adapters, and additional layouts.
+
+| Capability                          | Free | Planned Pro |
+| ----------------------------------- | :--: | :---------: |
+| Responsive dashboard shell          |  ✓   |      ✓      |
+| Theme and design system             |  ✓   |      ✓      |
+| Demo auth and permissions           |  ✓   |      ✓      |
+| Advanced analytics and filters      |  —   |      ✓      |
+| Production-ready data tables        |  —   |      ✓      |
+| Complete CRUD workflows             |  —   |      ✓      |
+| Billing and invoice screens         |  —   |      ✓      |
+| Additional layouts and API adapters |  —   |      ✓      |
+
+Follow the repository to receive NovaSaaS Pro development updates.
+
+## Contributing and feedback
+
+Issues and feature suggestions are welcome in the
+[GitHub repository](https://github.com/dvanessa/novasaas/issues). Please avoid
+including passwords, tokens, customer data, or other private information in a
+public issue.
 
 ## License
 

@@ -1,13 +1,16 @@
 import {
   ArrowRight,
   Check,
+  Code2,
   Command,
   KeyRound,
   LayoutDashboard,
   MoonStar,
   PanelLeft,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -54,6 +57,24 @@ const features = [
   },
 ];
 
+const freeFeatures = [
+  "Responsive dashboard shell",
+  "Demo authentication flows",
+  "Typed roles and permissions",
+  "Light, dark, and system themes",
+  "Reusable UI component library",
+  "MIT-licensed source code",
+];
+
+const proFeatures = [
+  "Advanced analytics and filters",
+  "Production-ready data tables",
+  "User and organization workflows",
+  "Configurable roles and permissions",
+  "Billing and invoice screens",
+  "Additional layouts and API adapters",
+];
+
 export default function Home() {
   return (
     <main className="bg-background min-h-screen overflow-hidden">
@@ -69,6 +90,15 @@ export default function Home() {
             NovaSaaS
           </Link>
           <div className="flex items-center gap-2">
+            <a
+              href="https://github.com/dvanessa/novasaas"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="View NovaSaaS on GitHub"
+              className={buttonVariants({ size: "icon", variant: "ghost" })}
+            >
+              <Code2 aria-hidden="true" className="size-4" />
+            </a>
             <ThemeToggle />
             <Link href="/login" className={buttonVariants({ size: "sm" })}>
               Live demo
@@ -92,15 +122,21 @@ export default function Home() {
               TypeScript, Tailwind CSS, and accessible UI primitives.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/login" className={buttonVariants({ size: "lg" })}>
-                Explore the dashboard
+              <a
+                href="https://github.com/dvanessa/novasaas"
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ size: "lg" })}
+              >
+                <Code2 aria-hidden="true" className="size-4" />
+                Get the source
                 <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
+              </a>
               <Link
-                href="/design-system"
+                href="/login"
                 className={buttonVariants({ size: "lg", variant: "outline" })}
               >
-                View design system
+                Explore the dashboard
               </Link>
             </div>
             <ul className="text-muted-foreground mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
@@ -118,67 +154,98 @@ export default function Home() {
             </ul>
           </div>
 
-          <Card className="bg-card/85 relative min-w-0 shadow-2xl shadow-indigo-500/10 backdrop-blur">
-            <CardContent className="p-4 sm:p-6">
-              <div className="border-border bg-background overflow-hidden rounded-lg border">
-                <div className="border-border flex items-center gap-2 border-b px-4 py-3">
-                  <span className="size-2.5 rounded-full bg-red-400" />
-                  <span className="size-2.5 rounded-full bg-amber-400" />
-                  <span className="size-2.5 rounded-full bg-emerald-400" />
-                  <span className="text-muted-foreground ml-2 text-xs">
-                    NovaSaaS / Dashboard
-                  </span>
-                </div>
-                <div className="grid grid-cols-[4rem_1fr] sm:grid-cols-[7rem_1fr]">
-                  <div className="bg-sidebar border-border min-h-72 border-r p-3">
-                    <div className="bg-primary mb-5 size-7 rounded-md" />
-                    <div className="space-y-3">
-                      {[90, 68, 76, 56, 72].map((width, index) => (
-                        <div
-                          key={index}
-                          className="bg-muted h-2 rounded-full"
-                          style={{ width: `${width}%` }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="min-w-0 p-4">
-                    <div className="mb-5 flex items-center justify-between gap-3">
-                      <div>
-                        <div className="bg-foreground/80 h-3 w-24 rounded-full" />
-                        <div className="bg-muted mt-2 h-2 w-32 rounded-full" />
-                      </div>
-                      <div className="bg-primary size-7 rounded-full" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      {["$48.2k", "2,420", "1,429", "2.4%"].map((value) => (
-                        <div
-                          key={value}
-                          className="border-border rounded-lg border p-3"
-                        >
-                          <div className="text-muted-foreground text-[10px]">
-                            Metric
-                          </div>
-                          <div className="mt-1 text-sm font-semibold">
-                            {value}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="border-border mt-3 flex h-24 items-end gap-1.5 rounded-lg border p-3">
-                      {[32, 45, 38, 62, 54, 76, 68, 88].map((height, index) => (
-                        <span
-                          key={index}
-                          className="bg-primary/80 flex-1 rounded-t-sm"
-                          style={{ height: `${height}%` }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
+          <Card className="bg-card/85 relative min-w-0 overflow-hidden p-2 shadow-2xl shadow-indigo-500/10 backdrop-blur sm:p-3">
+            <Image
+              src="/images/novasaas-dashboard.jpg"
+              alt="NovaSaaS Free dashboard showing SaaS metrics, revenue, subscriptions, and recent activity"
+              width={1363}
+              height={936}
+              priority
+              className="border-border h-auto w-full rounded-lg border"
+            />
           </Card>
+        </div>
+      </section>
+
+      <section className="bg-muted/45 border-y">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-primary text-sm font-semibold tracking-wider uppercase">
+              Free today, Pro next
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Start free and grow with NovaSaaS
+            </h2>
+            <p className="text-muted-foreground mt-4">
+              The Free edition is ready to use now. NovaSaaS Pro will focus on
+              complete workflows that save even more development time.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-12 grid max-w-5xl gap-6 lg:grid-cols-2">
+            <Card>
+              <CardContent className="p-6 sm:p-8">
+                <Badge variant="secondary">Available now</Badge>
+                <h3 className="mt-5 text-2xl font-semibold">NovaSaaS Free</h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-6">
+                  A polished open-source foundation for prototypes, portfolios,
+                  and real SaaS frontends.
+                </p>
+                <ul className="mt-6 space-y-3 text-sm">
+                  {freeFeatures.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                      <Check
+                        aria-hidden="true"
+                        className="text-success mt-0.5 size-4 shrink-0"
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="https://github.com/dvanessa/novasaas"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={buttonVariants({ className: "mt-8 w-full" })}
+                >
+                  <Code2 aria-hidden="true" className="size-4" />
+                  View on GitHub
+                </a>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/35 relative overflow-hidden">
+              <div className="bg-primary/8 absolute inset-x-0 top-0 h-24" />
+              <CardContent className="relative p-6 sm:p-8">
+                <Badge>In development</Badge>
+                <h3 className="mt-5 flex items-center gap-2 text-2xl font-semibold">
+                  NovaSaaS Pro
+                  <Sparkles
+                    aria-hidden="true"
+                    className="text-primary size-5"
+                  />
+                </h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-6">
+                  Complete feature modules for developers, founders, and
+                  agencies who want to ship faster.
+                </p>
+                <ul className="mt-6 space-y-3 text-sm">
+                  {proFeatures.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                      <Check
+                        aria-hidden="true"
+                        className="text-primary mt-0.5 size-4 shrink-0"
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-muted-foreground bg-accent mt-8 rounded-md px-4 py-3 text-center text-sm font-medium">
+                  Early-access registration is coming soon.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
