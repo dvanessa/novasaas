@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import { KitWaitlistForm } from "@/components/marketing/kit-waitlist-form";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -245,6 +246,33 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="pro-waitlist"
+        aria-labelledby="pro-waitlist-heading"
+        className="border-border bg-muted/45 border-b"
+      >
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:items-center lg:gap-12 lg:px-8">
+          <div className="min-w-0">
+            <p className="text-primary text-sm font-semibold tracking-wider uppercase">
+              NovaSaaS Pro
+            </p>
+            <h2
+              id="pro-waitlist-heading"
+              className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+            >
+              Get early access to NovaSaaS Pro
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-2xl leading-7">
+              Join the waitlist to receive launch updates, early access, and an
+              exclusive introductory discount.
+            </p>
+          </div>
+          <div className="border-border bg-card min-w-0 rounded-xl border p-4 shadow-sm sm:p-6">
+            <KitWaitlistForm />
           </div>
         </div>
       </section>
