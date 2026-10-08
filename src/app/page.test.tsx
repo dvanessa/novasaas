@@ -25,6 +25,12 @@ describe("public landing page", () => {
     render(<Home />);
 
     expect(
+      screen.getByText("Early-access registration is open now."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Join the NovaSaaS Pro waitlist" }),
+    ).toHaveAttribute("href", "#pro-waitlist");
+    expect(
       screen.getByRole("heading", {
         name: "Get early access to NovaSaaS Pro",
       }),

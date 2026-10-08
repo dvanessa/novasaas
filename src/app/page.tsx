@@ -242,8 +242,18 @@ export default function Home() {
                   ))}
                 </ul>
                 <p className="text-muted-foreground bg-accent mt-8 rounded-md px-4 py-3 text-center text-sm font-medium">
-                  Early-access registration is coming soon.
+                  Early-access registration is open now.
                 </p>
+                <Link
+                  href="#pro-waitlist"
+                  className={buttonVariants({
+                    className: "mt-3 w-full",
+                    variant: "outline",
+                  })}
+                >
+                  Join the NovaSaaS Pro waitlist
+                  <ArrowRight aria-hidden="true" className="size-4" />
+                </Link>
               </CardContent>
             </Card>
           </div>
