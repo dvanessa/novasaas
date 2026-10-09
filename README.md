@@ -7,6 +7,8 @@ connect to your own API, database, authentication provider, and business logic.
 [View the live demo](https://novasaas-v1.netlify.app/) ·
 [Open the dashboard](https://novasaas-v1.netlify.app/login)
 
+[Join the NovaSaaS Pro waitlist](https://novasaas-v1.netlify.app/#pro-waitlist)
+
 ![NovaSaaS Free dashboard](public/images/novasaas-dashboard.jpg)
 
 ## Highlights
@@ -34,6 +36,11 @@ connect to your own API, database, authentication provider, and business logic.
 
 These credentials are public frontend fixtures. They do not authenticate
 against a server and must never be reused in production.
+
+All dashboard metrics, charts, activities, users, organizations, subscriptions,
+billing values, and related records displayed in NovaSaaS Free are demonstration
+fixture data. Before production use, connect your own backend/API and database,
+implement server-side authorization, and configure production authentication.
 
 ## Technology
 
@@ -73,6 +80,7 @@ npm run start        # Run the production server
 npm run lint         # Run ESLint
 npm run typecheck    # Check TypeScript
 npm run test         # Run the test suite
+npm run audit:production # Audit production dependencies
 npm run test:watch   # Run tests in watch mode
 npm run format       # Format the codebase
 npm run format:check # Check formatting
