@@ -150,6 +150,7 @@ export function Sidebar() {
         target?.tagName === "INPUT" ||
         target?.tagName === "TEXTAREA" ||
         target?.tagName === "SELECT";
+      // Do not hijack the shortcut while someone is typing in a form field.
       if (
         !isEditable &&
         (event.metaKey || event.ctrlKey) &&

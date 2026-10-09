@@ -46,6 +46,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function readPersistedSession(): AuthenticationSession | null {
+  // Treat local storage as untrusted input: old or edited demo sessions should fail closed.
   const serialized = window.localStorage.getItem(AUTH_STORAGE_KEY);
   if (!serialized) return null;
 
@@ -116,6 +117,7 @@ export function initializeAuthStore() {
   if (typeof window === "undefined" || initialized) return;
   initialized = true;
   hydrateAuthStore();
+  // Keep the demo session in sync when another tab logs in, logs out, or switches accounts.
   window.addEventListener("storage", (event) => {
     if (event.key === AUTH_STORAGE_KEY || event.key === null) {
       hydrateAuthStore();

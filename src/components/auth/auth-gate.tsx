@@ -29,6 +29,7 @@ export function AuthGate({
     }
   }, [account, allowed, hydrated, pathname, router]);
 
+  // Keep protected content hidden until the client session is known and any redirect has started.
   if (!hydrated || !account || !allowed) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">

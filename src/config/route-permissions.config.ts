@@ -38,6 +38,7 @@ export const ROUTE_PERMISSIONS: readonly ProtectedRouteConfiguration[] = [
 export function getRoutePermission(pathname: string): Permission | undefined {
   const normalizedPath =
     pathname.split(/[?#]/, 1)[0].replace(/\/+$/, "") || "/";
+  // Prefer the most specific match so a child route can override its parent permission.
   const match = ROUTE_PERMISSIONS.filter(
     ({ pathname: routePath }) =>
       normalizedPath === routePath ||
