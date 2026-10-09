@@ -12,6 +12,8 @@ type ScriptLease = {
   cleanupToken: number;
 };
 
+// Kit owns the markup it injects. Reuse the script for this container so
+// Strict Mode does not render the signup form twice in development.
 const scriptLeases = new WeakMap<HTMLDivElement, ScriptLease>();
 
 export function KitWaitlistForm() {
@@ -41,6 +43,7 @@ export function KitWaitlistForm() {
     return () => {
       activeLease.users -= 1;
       const cleanupToken = ++activeLease.cleanupToken;
+      // Give a replayed effect a chance to reclaim the script before removing it.
       queueMicrotask(() => {
         if (
           activeLease.users === 0 &&

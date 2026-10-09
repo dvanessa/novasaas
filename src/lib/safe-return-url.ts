@@ -2,6 +2,8 @@ export function getSafeReturnUrl(
   returnTo: string | null | undefined,
   fallback = "/dashboard",
 ): string {
+  // Return paths must stay inside this app. Reject protocol-relative URLs,
+  // backslashes, and control characters before parsing.
   if (
     !returnTo ||
     !returnTo.startsWith("/") ||
